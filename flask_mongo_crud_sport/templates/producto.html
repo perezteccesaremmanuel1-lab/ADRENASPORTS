@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ producto.name }} - Adrenasport</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-blue: #0056b3;
+      --secondary-blue: #003d82;
+      --accent-orange: #ff6b00;
+      --light-bg: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .main-navbar {
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    
+    .thumb-img {
+      width: 100%;
+      cursor: pointer;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .thumb-img:hover {
+      border-color: var(--accent-orange);
+      transform: scale(1.05);
+    }
+    
+    .img-principal {
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .categories-bar {
+      background: #f8f9fa;
+      padding: 12px 0;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      border-bottom: 1px solid #ddd;
+      flex-wrap: wrap;
+    }
+    .categories-bar a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+    .categories-bar a:hover {
+      color: white;
+      background: var(--accent-orange);
+      transform: translateY(-2px);
+    }
+    
+    .boton-regresar {
+      background: white;
+      border: 2px solid var(--primary-blue);
+      color: var(--primary-blue);
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .boton-regresar:hover {
+      background: var(--primary-blue);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,86,179,0.3);
+    }
+    
+    .product-title {
+      color: var(--secondary-blue);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .price-main {
+      color: var(--primary-blue);
+      font-weight: 800;
+      font-size: 2.2rem;
+    }
+    
+    .price-old {
+      text-decoration: line-through;
+      color: #6c757d;
+      font-size: 1.3rem;
+    }
+    
+    .savings-badge {
+      background: var(--accent-orange);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .add-to-cart-btn {
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 0.8rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0,86,179,0.2);
+    }
+    
+    .add-to-cart-btn:hover {
+      background: var(--secondary-blue);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,86,179,0.3);
+    }
+    
+    .feature-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    
+    .feature-icon {
+      font-size: 2rem;
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .categories-bar {
+        gap: 15px;
+        padding: 8px 0;
+      }
+      
+      .categories-bar a {
+        font-size: 0.9rem;
+      }
+      
+      .price-main {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+
+  <script>
+    function cambiarImagen(src) {
+      document.getElementById("img-principal").src = src;
+    }
+  </script>
+</head>
+
+<body class="bg-light">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg main-navbar">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{{ url_for('inicio') }}">
+        <i class="bi bi-trophy-fill me-2"></i>
+        Adrenasport
+      </a>
+
+      <!-- Buscador -->
+      <div class="search-container mx-lg-3 my-2 my-lg-0">
+        <form action="{{ url_for('buscar') }}" method="GET" class="d-flex">
+          <input class="form-control search-box me-2" type="search" name="q" 
+                 placeholder="Buscar productos..." required>
+          <button class="btn search-btn" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Acciones de usuario -->
+      <div class="user-actions ms-lg-auto">
+        <a href="#" class="nav-icon" title="Mi Cuenta">
+          <i class="bi bi-person-circle me-1"></i>
+          <span class="d-none d-lg-inline">{{ usuario }}</span>
+        </a>
+        <a href="{{ url_for('carrito') }}" class="nav-icon" title="Carrito">
+          <i class="bi bi-cart3 me-1"></i>
+          <span class="d-none d-lg-inline">Carrito</span>
+          {% if session.carrito and session.carrito|length > 0 %}
+            <span class="badge bg-danger rounded-pill">{{ session.carrito|length }}</span>
+          {% endif %}
+        </a>
+        <a href="{{ url_for('logout') }}" class="nav-icon" title="Cerrar Sesión">
+          <i class="bi bi-box-arrow-right me-1"></i>
+          <span class="d-none d-lg-inline">Salir</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CATEGORÍAS -->
+  <div class="categories-bar">
+    <a href="{{ url_for('inicio') }}"><i class="bi bi-grid-fill"></i> Todos</a>
+    <a href="{{ url_for('categoria', category='soccer') }}"><i class="bi bi-arrow-through-heart-fill"></i> Soccer</a>
+    <a href="{{ url_for('categoria', category='americano') }}"><i class="bi bi-hexagon-fill"></i> Americano</a>
+    <a href="{{ url_for('categoria', category='ropa') }}"><i class="bi bi-bag-fill"></i> Ropa Deportiva</a>
+  </div>
+
+  <!-- PRODUCTO -->
+  <div class="container my-5">
+    <!-- Botón regresar -->
+    <div class="mb-4">
+      <a href="javascript:history.back()" class="boton-regresar">
+        <i class="bi bi-arrow-left"></i> Volver a productos
+      </a>
+    </div>
+
+    <div class="row">
+      <!-- Imágenes del producto -->
+      <div class="col-lg-6 mb-4">
+        <img id="img-principal" src="{{ producto.img if producto.img else 'https://via.placeholder.com/600x400/0056b3/ffffff?text=Adrenasport' }}" 
+             class="img-fluid img-principal w-100" alt="{{ producto.name }}"
+             onerror="this.src='https://via.placeholder.com/600x400/0056b3/ffffff?text=Adrenasport'">
+
+        <!-- Miniaturas -->
+        <div class="row mt-3 g-2">
+          <div class="col-4">
+            <img onclick="cambiarImagen('{{ producto.img if producto.img else 'https://via.placeholder.com/300x200/0056b3/ffffff?text=Adrenasport' }}')" 
+                 src="{{ producto.img if producto.img else 'https://via.placeholder.com/300x200/0056b3/ffffff?text=Adrenasport' }}" 
+                 class="thumb-img">
+          </div>
+          <!-- Puedes agregar más miniaturas si tu producto tiene más imágenes -->
+        </div>
+      </div>
+
+      <!-- Información del producto -->
+      <div class="col-lg-6">
+        <!-- Categoría -->
+        <div class="mb-3">
+          <span class="badge bg-primary">{{ producto.category|upper if producto.category else 'DEPORTE' }}</span>
+        </div>
+
+        <!-- Nombre -->
+        <h1 class="product-title">{{ producto.name }}</h1>
+
+        <!-- Precios -->
+        <div class="mb-4">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <span class="price-main">${{ producto.price }}</span>
+            {% if producto.oldPrice and producto.oldPrice > producto.price %}
+              <span class="price-old">${{ producto.oldPrice }}</span>
+              <span class="savings-badge">Ahorras ${{ producto.oldPrice - producto.price }}</span>
+            {% endif %}
+          </div>
+          
+          {% if producto.oldPrice and producto.oldPrice > producto.price %}
+            <div class="text-success">
+              <i class="bi bi-arrow-down-circle-fill"></i> 
+              <strong>{{ ((1 - producto.price / producto.oldPrice) * 100)|round|int }}% DE DESCUENTO</strong>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Descripción -->
+        {% if producto.description %}
+        <div class="mb-4">
+          <h5 class="fw-bold">Descripción</h5>
+          <p class="lead">{{ producto.description }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Botón agregar al carrito -->
+        <div class="mb-5">
+          <form action="{{ url_for('agregar_carrito', producto_id=producto._id) }}" method="POST">
+            <button type="submit" class="add-to-cart-btn">
+              <i class="bi bi-cart-plus me-2"></i>Agregar al Carrito
+            </button>
+          </form>
+        </div>
+
+        <!-- Características -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="feature-card text-center">
+              <div class="feature-icon">
+                <i class="bi bi-truck"></i>
+              </div>
+              <h6>Envío Gratis</h6>
+              <p class="small text-muted mb-0">En compras mayores a $500</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card text-center">
+              <div class="feature-icon">
+                <i class="bi bi-arrow-clockwise"></i>
+              </div>
+              <h6>Devoluciones</h6>
+              <p class="small text-muted mb-0">30 días para cambiar tu producto</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card text-center">
+              <div class="feature-icon">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <h6>Garantía</h6>
+              <p class="small text-muted mb-0">1 año en todos nuestros productos</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card text-center">
+              <div class="feature-icon">
+                <i class="bi bi-credit-card"></i>
+              </div>
+              <h6>Meses sin intereses</h6>
+              <p class="small text-muted mb-0">Hasta 12 MSI con tarjetas participantes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h5 class="mb-3">
+            <i class="bi bi-trophy-fill me-2"></i>Adrenasport
+          </h5>
+          <p class="mb-0">Tu tienda de confianza para equipamiento deportivo de alta calidad</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">&copy; 2024 Adrenasport. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
