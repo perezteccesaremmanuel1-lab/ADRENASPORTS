@@ -8,7 +8,7 @@ app.secret_key = "clave_super_secreta"
 
 # ------------------ CONEXIÓN A MONGODB ------------------
 # ❗ ERROR COMÚN: estabas conectando a un DB en el URL y otro en client[]
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb+srv://perezteccesaremmanuel1_db_user:vBWeaxuovVUZGAQb@escuela.7uvtn09.mongodb.net/adrenasport")
 db = client["adrenasport5"]   # <--- ESTE ES TU DB REAL
 usuarios = db["usuarios"]
 productos = db["productos"]
