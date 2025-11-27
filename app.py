@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
 
-app = Flask(__name__, template_folder='flask_mongo_crud_alumnos/templates')
+app = Flask(__name__, template_folder='flask_mongo_crud_sport/templates')
 app.secret_key = "clave_super_secreta"
 
 # ------------------ CONEXIÓN A MONGODB ------------------
