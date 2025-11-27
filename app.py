@@ -2,14 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
+import random
 
 app = Flask(__name__, template_folder='flask_mongo_crud_sport/templates')
 app.secret_key = "clave_super_secreta"
 
 # ------------------ CONEXIÓN A MONGODB ------------------
-# ❗ ERROR COMÚN: estabas conectando a un DB en el URL y otro en client[]
 client = MongoClient("mongodb+srv://perezteccesaremmanuel1_db_user:vBWeaxuovVUZGAQb@escuela.7uvtn09.mongodb.net/adrenasport")
-db = client["adrenasport5"]   # <--- ESTE ES TU DB REAL
+db = client["adrenasport5"]
 usuarios = db["usuarios"]
 productos = db["productos"]
 pagos = db["pagos"]
@@ -97,7 +97,7 @@ def buscar():
                            busqueda=q)
 
 # ---------------------------------------------------------
-# FILTRO POR CATEGORÍA
+# CATEGORÍA
 # ---------------------------------------------------------
 @app.route("/categoria/<category>")
 def categoria(category):
@@ -115,7 +115,7 @@ def categoria(category):
                            categoria=category)
 
 # ---------------------------------------------------------
-# DETALLE DEL PRODUCTO
+# DETALLE PRODUCTO
 # ---------------------------------------------------------
 @app.route("/producto/<producto_id>")
 def producto_detalle(producto_id):
@@ -126,7 +126,7 @@ def producto_detalle(producto_id):
     return render_template("producto.html", producto=producto, usuario=session["usuario"])
 
 # ---------------------------------------------------------
-# AGREGAR AL CARRITO
+# AGREGAR CARRITO
 # ---------------------------------------------------------
 @app.route("/agregar_carrito/<producto_id>", methods=["POST"])
 def agregar_carrito(producto_id):
@@ -181,7 +181,7 @@ def actualizar_cantidad(producto_id):
     return redirect(url_for("carrito"))
 
 # ---------------------------------------------------------
-# ELIMINAR PRODUCTO DEL CARRITO
+# ELIMINAR
 # ---------------------------------------------------------
 @app.route("/eliminar_carrito/<producto_id>", methods=["POST"])
 def eliminar_carrito(producto_id):
@@ -191,7 +191,7 @@ def eliminar_carrito(producto_id):
     return redirect(url_for("carrito"))
 
 # ---------------------------------------------------------
-# VACIAR CARRITO
+# VACIAR
 # ---------------------------------------------------------
 @app.route("/vaciar_carrito", methods=["POST"])
 def vaciar_carrito():
@@ -215,6 +215,8 @@ def pago():
         cvv = request.form["cvv"]
         fecha = request.form["fecha"]
 
+        tracking = f"AD{random.randint(100000, 999999)}"
+
         pagos.insert_one({
             "usuario": session["usuario"],
             "carrito": carrito,
@@ -223,12 +225,19 @@ def pago():
             "numero_tarjeta": tarjeta,
             "cvv": cvv,
             "fecha_exp": fecha,
+            "tracking": tracking,
             "fecha_compra": datetime.now()
         })
 
         session["carrito"] = []
 
-        return render_template("pago_exitoso.html", total=total)
+        return render_template(
+            "pago_exitoso.html",
+            total=total,
+            fecha=datetime.now().strftime("%d/%m/%Y"),
+            hora=datetime.now().strftime("%H:%M"),
+            tracking=tracking
+        )
 
     return render_template("pago.html", carrito=carrito, total=total)
 
@@ -239,6 +248,7 @@ def pago():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
 
 # ---------------------------------------------------------
 # MAIN
